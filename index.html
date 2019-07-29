@@ -23,27 +23,12 @@
         .news {
             width: 640px;
             height: 360px;
-        }
-
-        .content {
-            width: 100%;
-            height: 100%;
             display: block;
             position: relative;
             background-color: black;
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .news-bg {
-            position: absolute;
-            filter: blur(5px);
-            width: 100%;
-            height: 359px;
-            background-position: center;
         }
 
         .news .bottom {
@@ -82,8 +67,9 @@
             width: 530px;
             height: 25px;
             padding-left: 10px;
-            background-color: rgb(36, 3, 90);
+            background-color: rgb(255, 230, 0);
             float: right;
+            color: black;
         }
 
         .controls {
@@ -106,31 +92,25 @@
     </div>
     
     <div class="news">
-        <div class="news-bg"></div>
-        <div class="content">
-            <div class="live white-on-red">live</div>
-            <div class="bottom">
-                <div class="breaking white-on-red">breaking news</div>
-                <div class="headline"></div>
-                <div class="ticker">
-                    <div class="time"></div>
-                    <div class="text"></div>
-                </div>
+        <div class="live white-on-red">live</div>
+        <div class="bottom">
+            <div class="breaking white-on-red">breaking news</div>
+            <div class="headline"></div>
+            <div class="ticker">
+                <div class="time"></div>
+                <div class="text"></div>
             </div>
         </div>
     </div><br>
     <button id="download">Generate Image</button><br><br>
-    <script src="rgbaster.js"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <a id="imgLink" download="news">Download Image</a>
+    <script src="vibrant.min.js"></script>
+    <script src="html2canvas.min.js"></script>
     <script>
         var newsEl = document.getElementsByClassName('news')[0];
-        var contentEl = document.getElementsByClassName('content')[0];
-        var newsBgEl = document.getElementsByClassName('news-bg')[0];
         var headlineEl = document.getElementsByClassName('headline')[0];
         var timeEl = document.getElementsByClassName('time')[0];
         var tickerTextEl = document.getElementsByClassName('text')[0];
-
-        var lastCanvas;
 
         headline.addEventListener('input', function(e) {
             headlineEl.textContent = headline.value;
@@ -161,8 +141,12 @@
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     var newImageURL = e.target.result;
-                    
-                    contentEl.style.backgroundImage = newsBgEl.style.backgroundImage = newImageURL;
+                    Vibrant.from(newImageURL).getPalette(function(err, palette) {
+                        var rgb = palette.LightVibrant;
+                        // console.log(palette);
+                        newsEl.style.backgroundColor = 'rgb(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ')';
+                        newsEl.style.backgroundImage = "url('" + newImageURL + "')";
+                    });
                 };
                 reader.readAsDataURL(imageUpload.files[0]);
             } catch (err) {
@@ -172,12 +156,7 @@
 
         download.addEventListener('click', function(e) {
             html2canvas(newsEl).then(function(canvas) {
-                if (lastCanvas) {
-                    document.body.replaceChild(lastCanvas, canvas);
-                } else {
-                    document.body.appendChild(canvas);
-                }
-                lastCanvas = canvas;
+                imgLink.href = canvas.toDataURL();
             });
         });
     </script>
