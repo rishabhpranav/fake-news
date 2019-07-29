@@ -154,7 +154,7 @@
             }
         });
 
-        download.addEventListener('click', function(e) {
+        download.addEventListener('click touchstart', function(e) {
             html2canvas(newsEl).then(function(canvas) {
                 imgLink.href = canvas.toDataURL('image/png');
             });
