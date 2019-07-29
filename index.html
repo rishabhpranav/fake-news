@@ -103,7 +103,7 @@
         </div>
     </div><br>
     <button id="download">Generate Image</button><br><br>
-    <a id="imgLink" download="news">Download Image</a>
+    <a id="imgLink" download="news.png">Download Image</a>
     <script src="vibrant.min.js"></script>
     <script src="html2canvas.min.js"></script>
     <script>
@@ -156,7 +156,7 @@
 
         download.addEventListener('click', function(e) {
             html2canvas(newsEl).then(function(canvas) {
-                imgLink.href = canvas.toDataURL();
+                imgLink.href = canvas.toDataURL('image/png');
             });
         });
     </script>
